@@ -3,16 +3,32 @@ import os
 
 version = '0.1'
 
+def read(*rnames):
+    return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
+
+long_description = (
+    read('README.txt')
+    + '\n' +
+    read('docs', 'INSTALL.txt')
+    + '\n' +
+    read('docs', 'CONTRIBUTORS.txt')
+    + '\n' +
+    'Change history\n'
+    '**************\n'
+    + '\n' +
+    read('docs', 'CHANGES.txt')
+    + '\n')
+
 setup(name='collective.memberapproval',
       version=version,
       description="Member approval for Plone",
-      long_description=open("README.txt").read() + "\n" +
-                       open(os.path.join("docs", "HISTORY.txt")).read(),
+      long_description=long_description,
       # Get more strings from
       # http://pypi.python.org/pypi?:action=list_classifiers
       classifiers=[
         "Framework :: Plone",
         "Programming Language :: Python",
+        "Programming Language :: Python :: 2",
         ],
       keywords='',
       author='Radim Novotny',
