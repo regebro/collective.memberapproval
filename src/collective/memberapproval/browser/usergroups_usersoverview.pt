@@ -129,7 +129,7 @@
                                          tal:condition="not:many_users"
                                          />
                                          
-                                  <select name="approved"
+                                  Approval status: <select name="approved"
                                           tal:define="current request/approved | nothing">
                                       <option value="">All</option>
                                       <option value="1" 
