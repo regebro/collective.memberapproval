@@ -1,5 +1,7 @@
-0.1 (xxxx-xx-xx)
-----------------
+Changelog
+=========
 
-- Created recipe with ZopeSkel
-  [Radim Novotny].
+0.1dev (unreleased)
+-------------------
+
+- Initial release
