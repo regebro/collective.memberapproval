@@ -4,7 +4,7 @@ Change history
 1.0a2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fixed the tests. [regebro]
 
 
 1.0a1 (2012-05-29)

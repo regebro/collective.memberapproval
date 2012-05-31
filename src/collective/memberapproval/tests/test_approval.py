@@ -37,18 +37,23 @@ class ApprovalTest(unittest.TestCase):
         self.failIf('Login Name' in self.browser.contents)
         self.failUnless('Only disapproved' in self.browser.contents)
 
-        # This test does not work - user seems to be approved even if it should be initially disapproved
+        # The test user is initially approved
         self.browser.open(self.portal.absolute_url()+'/@@user-information?userid='+TEST_USER_ID)
-        self.failUnless('Approve user' in self.browser.contents)
+        self.failUnless('Disapprove user' in self.browser.contents)
 
     def test_approval_view(self):
         self.login(username=SITE_OWNER_NAME, password=SITE_OWNER_PASSWORD, root=self.layer['app'])
         self.browser.open(self.portal.absolute_url()+'/@@user-information?userid='+TEST_USER_ID)
-        # This test does not work - user seems to be approved even if it should be initially disapproved
-        self.browser.getLink('Approve user').click()
+
+        # The test user is initially approved
+        self.browser.getLink('Disapprove user').click()
         # browser returns to previous URL
         self.failUnless('/@@user-information?userid='+TEST_USER_ID in self.browser.url)
-        # user is approved now
+        # We need to open the page again to avoid a 302 error in mechanize
+        self.browser.open(self.portal.absolute_url()+'/@@user-information?userid='+TEST_USER_ID)
+        # The user is disapproved now, approve it again.
+        self.browser.getLink('Approve user').click()
+        self.failUnless('/@@user-information?userid='+TEST_USER_ID in self.browser.url)
         self.failUnless('Disapprove user' in self.browser.contents)
 
     def test_plugin_works(self):
