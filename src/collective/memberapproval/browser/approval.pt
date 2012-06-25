@@ -13,7 +13,7 @@
                 userid request/userid | nothing;
                 user_exists python:view.user_exists(userid);
                 userquery python:view.makeQuery(userid=userid);
-                approved python:view.is_approved(userid);
+                approved python:view.approval_status(userid) is True;
                 ">
 
 

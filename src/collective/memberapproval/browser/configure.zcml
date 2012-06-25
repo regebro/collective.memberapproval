@@ -36,7 +36,7 @@
           
       <browser:page
           name="user_approved"
-          attribute="is_approved"
+          attribute="approval_status"
           />
           
    </browser:pages>

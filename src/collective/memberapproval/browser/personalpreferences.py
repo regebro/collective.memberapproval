@@ -11,8 +11,8 @@ class NGBUserDataConfiglet(UserDataConfiglet):
     def approval_view(self):
         return getMultiAdapter((self.context, self.request), name=u"user-approval")
         
-    def is_approved(self):
-        return self.approval_view().is_approved(self.userid)
+    def approval_status(self):
+        return self.approval_view().approval_status(self.userid)
 
     def approve_user(self):
         self.approval_view().approve_user(self.userid)

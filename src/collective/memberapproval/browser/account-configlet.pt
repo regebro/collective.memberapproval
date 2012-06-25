@@ -18,7 +18,7 @@
         <div id="edit-bar"
              tal:define="view_name view/__name__;
                          userid view/userid|nothing;
-                         is_approved view/is_approved;
+                         approval_status view/approval_status;
                          userquery python:view.makeQuery(userid=userid)">
             <ul class="contentViews" id="content-views">
               <li tal:define="selected python:view_name=='user-information'"
@@ -38,12 +38,12 @@
                    tal:attributes="href string:$portal_url/@@usergroup-usermembership?${userquery}"
                    i18n:translate="label_group_memberships">Group Memberships</a>
               </li>
-              <li tal:condition="is_approved">
+              <li tal:condition="approval_status">
                 <a href=""
                    tal:attributes="href string:$portal_url/@@user-disapprove?${userquery}"
                    i18n:translate="label_disapprove_user">Disapprove user</a>
               </li>
-              <li tal:condition="not:is_approved">
+              <li tal:condition="not:approval_status">
                 <a href=""
                    tal:attributes="href string:$portal_url/@@user-approve?${userquery}"
                    i18n:translate="label_approve_user">Approve user</a>

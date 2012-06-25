@@ -4,7 +4,10 @@ Change history
 1.0b2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- There are now three states: Pending, Approved, Disapproved.
+  You can this way show all pending users. You can only
+  approve or disapprove users, you can not make them pending
+  once they have been approved or disapproved.
 
 
 1.0b1 (2012-05-31)

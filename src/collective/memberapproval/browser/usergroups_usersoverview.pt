@@ -132,10 +132,12 @@
                                   Approval status: <select name="approved"
                                           tal:define="current request/approved | nothing">
                                       <option value="">All</option>
-                                      <option value="1" 
-                                              tal:attributes="selected python:current=='1'">Only approved</option>
-                                      <option value="0" 
-                                              tal:attributes="selected python:current=='0'">Only disapproved</option>
+                                      <option value="APPROVED" 
+                                              tal:attributes="selected python:current=='APPROVED'">Only approved</option>
+                                      <option value="DISAPPROVED" 
+                                              tal:attributes="selected python:current=='DISAPPROVED'">Only disapproved</option>
+                                      <option value="PENDING" 
+                                              tal:attributes="selected python:current=='PENDING'">Pending</option>
                                   </select>
                               </th>
                           </tr>
@@ -208,13 +210,19 @@
                                                                  disabled python:user['can_delete'] and default or 'disabled'" />
                                 </td>
                                 <td class="listingCheckbox">
-                                  <input type="hidden" name="is_approved_all:list" tal:attributes="value userid" />
-                                  <input type="checkbox"
-                                                 class="noborder notify"
-                                                 name="is_approved:list"
-                                                 value=""
-                                                 tal:attributes="value userid;
-                                                                 checked python:user['is_approved']" />
+                                  <input type="hidden" name="users.approval_status:records" tal:attributes="value python:user['approval_status']" />
+                                  <select name="users.approval_action:records">
+                                     <!-- Empty value equates to "None" -->
+                                     <option value="" i18n:translate=""
+                                         tal:condition="python:user['approval_status'] is None"
+                                         tal:attributes="selected python:user['approval_status'] is None">
+                                         Pending</option>
+                                     <option value="True" i18n:translate=""
+                                         tal:attributes="selected python:user['approval_status'] is True">
+                                         Approved</option>
+                                     <option value="False" i18n:translate=""
+                                         tal:attributes="selected python:user['approval_status'] is False">
+                                         Disapproved</option>
                                 </td>
                             </tr>
                           </tal:block>

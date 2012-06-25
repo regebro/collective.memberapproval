@@ -11,7 +11,7 @@ class IApprovalView(Interface):
     def disapprove_user(userid):
         """ Unapprove particular user """    
 
-    def is_approved(userid):
+    def approval_status(userid):
         """ Returns current approval status """    
 
     def user_exists(userid):

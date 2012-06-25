@@ -15,13 +15,18 @@ class UsersOverviewControlPanel(BaseUsersOverviewControlPanel):
         super(UsersOverviewControlPanel, self).manageUser(users, resetpassword, delete)
         acl_users = getToolByName(self.context, 'acl_users')
         form = self.request.form
-        all_userids = form.get('is_approved_all', [])
-        to_approve = form.get('is_approved', [])
-        for userid in all_userids:
-            if userid in to_approve:
-                acl_users.approveUser(userid)
+        records = form.get('users', [])
+        for user in records:
+            if user['approval_status'] == user['approval_action']:
+                # No change
+                continue
+        
+            if user['approval_action'] == 'True':
+                acl_users.approveUser(user['id'])
+            elif user['approval_action'] == 'False':
+                acl_users.disapproveUser(user['id'])
             else:
-                acl_users.disapproveUser(userid)
+                raise ValueError('Unknown approval status "%s"' % user['approval_action'])
     
     def doSearch(self, searchString):
         acl = getToolByName(self, 'acl_users')
@@ -63,12 +68,10 @@ class UsersOverviewControlPanel(BaseUsersOverviewControlPanel):
         results = []
         for user_info in explicit_users:
             userId = user_info['id']
-            user_approved = acl.userApproved(userId)
-            if approved_status=='1':
-                if not user_approved:
-                    continue
-            elif approved_status=='0':
-                if user_approved:
+            user_status = acl.userStatus(userId)
+            if approved_status:
+                approved_filter = {'APPROVED': True, 'DISAPPROVED': False, 'PENDING': None}[approved_status]
+                if approved_filter is not user_status:
                     continue
 
             user = mtool.getMemberById(userId)
@@ -102,7 +105,7 @@ class UsersOverviewControlPanel(BaseUsersOverviewControlPanel):
             user_info['can_delete'] = canDelete
             user_info['can_set_email'] = user.canWriteProperty('email')
             user_info['can_set_password'] = canPasswordSet
-            user_info['is_approved'] = user_approved
+            user_info['approval_status'] = user_status
             results.append(user_info)
 
         # Sort the users by fullname

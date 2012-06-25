@@ -57,9 +57,9 @@ class ApprovalView(BrowserView):
                     ptool.addPortalMessage(_('User has been disapproved.'))
                     return self.request.response.redirect(referer)
         
-    def is_approved(self, userid):
+    def approval_status(self, userid):
         if userid:
-            return self.acl_users.userApproved(userid)
+            return self.acl_users.userStatus(userid)
 
     def __call__(self):
         form = self.request.form
