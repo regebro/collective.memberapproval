@@ -72,6 +72,12 @@
                                      tal:condition="not:disapproved"
                                      value="Disapprove"
                                      i18n:attributes="value button_disapprove" />
+                              <input type="submit"
+                                     name="form.button.delete"
+                                     class="context"
+                                     tal:condition="pending"
+                                     value="Disapprove & Delete"
+                                     i18n:attributes="value button_delete" />
                           </div>
                     </form>
                 </tal:block>

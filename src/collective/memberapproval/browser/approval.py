@@ -54,6 +54,15 @@ class ApprovalView(BrowserView):
                 ptool.addPortalMessage(_('User has been disapproved.'))
                 portal_url = getToolByName(self.context, 'portal_url')()
                 return self.request.response.redirect(portal_url + '/@@user-approval?userid=' + userid)
+
+    def delete_user(self, userid, REQUEST=None, RESPONSE=None):
+        if userid:
+            self.acl_users.userFolderDelUsers([userid])
+            if REQUEST is not None:
+                ptool = getToolByName(self.context, 'plone_utils')
+                ptool.addPortalMessage(_('User has been deleted.'))
+                portal_url = getToolByName(self.context, 'portal_url')()
+                return self.request.response.redirect(portal_url + '/@@usergroup-userprefs')
         
     def approval_status(self, userid):
         if userid:
@@ -67,4 +76,6 @@ class ApprovalView(BrowserView):
                 self.approve_user(userid)
             elif form.has_key('form.button.disapprove'):
                 self.disapprove_user(userid)
+            elif form.has_key('form.button.delete'):
+                self.delete_user(userid, self.request)
         return self.index()
