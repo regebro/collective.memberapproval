@@ -41,25 +41,23 @@ class ApprovalView(BrowserView):
         if userid:
             self.acl_users.approveUser(userid)
             if REQUEST is not None:
-                referer = REQUEST.get('HTTP_REFERER')
-                if referer:
-                    ptool = getToolByName(self.context, 'plone_utils')
-                    ptool.addPortalMessage(_('User has been approved.'))
-                    return self.request.response.redirect(referer)
+                ptool = getToolByName(self.context, 'plone_utils')
+                ptool.addPortalMessage(_('User has been approved.'))
+                portal_url = getToolByName(self.context, 'portal_url')()
+                return self.request.response.redirect(portal_url + '/@@user-approval?userid=' + userid)
 
     def disapprove_user(self, userid, REQUEST=None, RESPONSE=None):
         if userid:
             self.acl_users.disapproveUser(userid)
             if REQUEST is not None:
-                referer = REQUEST.get('HTTP_REFERER')
-                if referer:
-                    ptool = getToolByName(self.context, 'plone_utils')
-                    ptool.addPortalMessage(_('User has been disapproved.'))
-                    return self.request.response.redirect(referer)
+                ptool = getToolByName(self.context, 'plone_utils')
+                ptool.addPortalMessage(_('User has been disapproved.'))
+                portal_url = getToolByName(self.context, 'portal_url')()
+                return self.request.response.redirect(portal_url + '/@@user-approval?userid=' + userid)
         
     def approval_status(self, userid):
         if userid:
-            return self.acl_users.userStatus(userid)
+            return {None: 'pending', False: 'disapproved', True: 'approved'}[self.acl_users.userStatus(userid)]
 
     def __call__(self):
         form = self.request.form

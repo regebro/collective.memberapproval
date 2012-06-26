@@ -4,10 +4,11 @@ Change history
 1.0b2 (unreleased)
 ------------------
 
-- There are now three states: Pending, Approved, Disapproved.
-  You can this way show all pending users. You can only
-  approve or disapprove users, you can not make them pending
-  once they have been approved or disapproved.
+- There are now three states: Pending, Approved, Disapproved. You can this
+  way show all pending users. You can only approve or disapprove users, you
+  can not make them pending once they have been approved or disapproved.
+  
+- Having an approval link in the tabs confused the users, so I removed it.
 
 
 1.0b1 (2012-05-31)

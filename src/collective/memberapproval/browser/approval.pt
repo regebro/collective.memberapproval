@@ -13,7 +13,10 @@
                 userid request/userid | nothing;
                 user_exists python:view.user_exists(userid);
                 userquery python:view.makeQuery(userid=userid);
-                approved python:view.approval_status(userid) is True;
+                userstatus python:view.approval_status(userid);
+                approved python: userstatus == 'approved';
+                disapproved python: userstatus == 'disapproved';
+                pending python: userstatus == 'pending';
                 ">
 
 
@@ -40,10 +43,15 @@
                                                  tal:omit-tag=""
                                                  >approved</span
                                                ><span 
-                                                 i18n:name="notapproved"
-                                                 tal:condition="not:approved"
+                                                 i18n:name="disapproved"
+                                                 tal:condition="disapproved"
                                                  tal:omit-tag=""
-                                                 >not approved</span>.
+                                                 >disapproved</span
+                                               ><span 
+                                                 i18n:name="pending"
+                                                 tal:condition="pending"
+                                                 tal:omit-tag=""
+                                                 >pending approval</span>.
                                              
                     </div>
                     <form action=""
@@ -61,7 +69,7 @@
                               <input type="submit"
                                      name="form.button.disapprove"
                                      class="context"
-                                     tal:condition="approved"
+                                     tal:condition="not:disapproved"
                                      value="Disapprove"
                                      i18n:attributes="value button_disapprove" />
                           </div>

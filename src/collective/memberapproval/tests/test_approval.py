@@ -1,4 +1,5 @@
 import unittest2 as unittest
+import transaction
 
 from plone.app.testing import TEST_USER_ID, TEST_USER_NAME
 from plone.app.testing import TEST_USER_PASSWORD
@@ -19,7 +20,10 @@ class ApprovalTest(unittest.TestCase):
         self.browser.handleErrors = False
 
     def tearDown(self):
-        self.portal.acl_users.disapproveUser(TEST_USER_ID)
+        # Hack the user status back to pending
+        self.portal.acl_users.source_users_approval._activated_userid[TEST_USER_ID] = None
+        # Not sure why you have to commit here for it to happen, but you do.
+        transaction.commit()
         
     def login(self, username=TEST_USER_NAME, password=TEST_USER_PASSWORD, root=None):
         if root is None:
@@ -37,25 +41,23 @@ class ApprovalTest(unittest.TestCase):
         self.failIf('Login Name' in self.browser.contents)
         self.failUnless('Only disapproved' in self.browser.contents)
 
-        # The test user is initially approved
-        self.browser.open(self.portal.absolute_url()+'/@@user-information?userid='+TEST_USER_ID)
-        self.failUnless('Disapprove user' in self.browser.contents)
-
-    def test_approval_view(self):
+    def test_approval_links(self):
         self.login(username=SITE_OWNER_NAME, password=SITE_OWNER_PASSWORD, root=self.layer['app'])
-        self.browser.open(self.portal.absolute_url()+'/@@user-information?userid='+TEST_USER_ID)
+        
+        # The test user is initially pending
+        self.browser.open(self.portal.absolute_url()+'/@@user-approved?userid='+TEST_USER_ID)
+        self.assertEqual(self.browser.contents, 'pending')
 
-        # The test user is initially approved
-        self.browser.getLink('Disapprove user').click()
-        # browser returns to previous URL
-        self.failUnless('/@@user-information?userid='+TEST_USER_ID in self.browser.url)
-        # We need to open the page again to avoid a 302 error in mechanize
-        self.browser.open(self.portal.absolute_url()+'/@@user-information?userid='+TEST_USER_ID)
-        # The user is disapproved now, approve it again.
-        self.browser.getLink('Approve user').click()
-        self.failUnless('/@@user-information?userid='+TEST_USER_ID in self.browser.url)
-        self.failUnless('Disapprove user' in self.browser.contents)
+        # Approve user
+        self.browser.open(self.portal.absolute_url()+'/@@user-approve?userid='+TEST_USER_ID)
+        self.browser.open(self.portal.absolute_url()+'/@@user-approved?userid='+TEST_USER_ID)
+        self.assertEqual(self.browser.contents, 'approved')
 
+        # Disapprove user
+        self.browser.open(self.portal.absolute_url()+'/@@user-disapprove?userid='+TEST_USER_ID)
+        self.browser.open(self.portal.absolute_url()+'/@@user-approved?userid='+TEST_USER_ID)
+        self.assertEqual(self.browser.contents, 'disapproved')
+        
     def test_plugin_works(self):
         portal = self.layer['portal']
         # user is not approved to login yet
@@ -63,7 +65,7 @@ class ApprovalTest(unittest.TestCase):
         self.browser.open(portal.absolute_url())
         self.failIf(TEST_USER_NAME in self.browser.contents)
 
-    def test_approval(self):
+    def test_approval_view(self):
         portal = self.layer['portal']
         # login as site owner
         self.login(username=SITE_OWNER_NAME, password=SITE_OWNER_PASSWORD, root=self.layer['app'])
@@ -73,11 +75,11 @@ class ApprovalTest(unittest.TestCase):
         self.failUnless('User "%s" does not exist'%TEST_USER_NAME in self.browser.contents)
 
         self.browser.open(portal.absolute_url()+'/@@user-approval?userid='+TEST_USER_ID)
-        self.failUnless('User "%s" is currently not approved'%TEST_USER_ID in self.browser.contents)
+        self.failUnless('User "%s" is currently pending approval'%TEST_USER_ID in self.browser.contents)
         self.browser.getControl('Approve').click()
         self.failUnless('User "%s" is currently approved'%TEST_USER_ID in self.browser.contents)
         self.browser.getControl('Disapprove').click()
-        self.failUnless('User "%s" is currently not approved'%TEST_USER_ID in self.browser.contents)
+        self.failUnless('User "%s" is currently disapproved'%TEST_USER_ID in self.browser.contents)
 
         # ok, approve again
         self.browser.getControl('Approve').click()
