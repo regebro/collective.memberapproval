@@ -30,7 +30,7 @@ collective.memberapproval providess the following management views:
   direct link to disapprove users from a notification email. Example:
   http://localhost:8080/Plone/@@user-disapprove?userid=theusername
 
-* @@user_approved: This view will return True if the user specified is
+* @@user-approved: This view will return True if the user specified is
   approved, or None otherwise. It does not provide any HTML view. Example:
-  http://localhost:8080/Plone/@@user_approved?userid=theusername
+  http://localhost:8080/Plone/@@user-approved?userid=theusername
 
