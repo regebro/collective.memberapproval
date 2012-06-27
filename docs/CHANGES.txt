@@ -1,7 +1,7 @@
 Change history
 **************
 
-1.0rc2 (unreleased)
+1.0rc2 (2012-06-27)
 -------------------
 
 - Added new registered.pt and registered_notify_template.pt templates that
