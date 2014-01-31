@@ -46,6 +46,7 @@ setup(name='collective.memberapproval',
           'test': [
               'plone.app.testing',
               'interlude',
+              'zope.globalrequest',
           ]
       },      
       entry_points="""
