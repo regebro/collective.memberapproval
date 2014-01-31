@@ -24,8 +24,10 @@ setup(name='collective.memberapproval',
       # http://pypi.python.org/pypi?:action=list_classifiers
       classifiers=[
         "Framework :: Plone",
+        "Framework :: Plone :: 4.1",
+        "Framework :: Plone :: 4.2",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.6",
+        "Programming Language :: Python :: 2.7",
         ],
       keywords='plone pas user-management',
       author='Radim Novotny',
